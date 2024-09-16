@@ -20,7 +20,7 @@ if(isset($_POST['ok'])){
     $mdp = $_POST['pass'];
     $email = $POST['email'];
 
-    $requete = $bdd->prepare("INSERT INTO users VALUES (0, :pseudo , :nom , :prenom , :mdp , :email");
+    $requete = $bdd->prepare("INSERT INTO users VALUES (0, :pseudo , :nom , :prenom , :mdp , :email, '' ");
     $requete->execute(
         array(
             "pseudo" => $pseudo,
