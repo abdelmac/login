@@ -20,19 +20,19 @@
 
         <form>
             <label for="nom" > Votre nom </label>
-            <input type="text" id="nom" name="nom" placeholder="Entrez votre nom">
+            <input type="text" id="nom" name="nom" placeholder="Entrez votre nom ...">
             <br />
             <label for="nom" > Votre prenom </label>
-            <input type="text" id="prenom" name="prenom" placeholder="Entrez votre prenom">
+            <input type="text" id="prenom" name="prenom" placeholder="Entrez votre prenom...">
             <br />
             <label for="nom" > Votre pseudo </label>
-            <input type="text" id="pseudo" name="pseudo" placeholder="Entrez votre pseudo">
+            <input type="text" id="pseudo" name="pseudo" placeholder="Entrez votre pseudo...">
             <br />
             <label for="nom" > Votre e-mail </label>
-            <input type="text" id="email" name="email" placeholder="Entrez votre email">
+            <input type="text" id="email" name="email" placeholder="Entrez votre email...">
             <br />
             <label for="nom" > Votre pass </label>
-            <input type="password" id="pass" name="pass" placeholder="Entrez votre mots de passe">
+            <input type="password" id="pass" name="pass" placeholder="Entrez votre mots de passe...">
             <br />
             
         </form>
