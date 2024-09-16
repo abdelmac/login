@@ -18,7 +18,7 @@
 
     <body>
 
-        <form>
+        <form method="POST" action="traitement.php">
             <label for="nom" > Votre nom </label>
             <input type="text" id="nom" name="nom" placeholder="Entrez votre nom ...">
             <br />
