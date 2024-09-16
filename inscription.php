@@ -34,7 +34,7 @@
             <label for="nom" > Votre pass </label>
             <input type="password" id="pass" name="pass" placeholder="Entrez votre mots de passe...">
             <br />
-            
+            <input type="submit" value="M'inscrire" name="ok">
         </form>
 
     </body>
