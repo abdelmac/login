@@ -36,7 +36,13 @@ if (isset($_POST['ok'])) {
             "pseudo" => $pseudo,
             "nom" => $nom,
             "prenom" => $prenom,
-            "md
+            "mdp" => $hashed_password,  // Utilisation du mot de passe haché
+            "email" => $email
+        ]);
 
-
+        echo "Inscription réussie !";
+    } else {
+        echo "Tous les champs doivent être remplis.";
+    }
+}
 ?>
