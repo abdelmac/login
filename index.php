@@ -14,7 +14,7 @@
   <body>
     <div class="container">
       <div class="add-flashcard-con">
-        <button id="add-flashcard">Add Flashcard 2</button>
+        <button id="add-flashcard">Add Flashcard</button>
       </div>
       <p><a href="login.php">connect</a></p>
       <!-- Display Card of Question And Answers Here -->
