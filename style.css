@@ -92,7 +92,7 @@
     border: 1px solid #d0d0d0;
     outline: none;
     color: #414a67;
-    border-radius: 0.3em;
+    border-radius: 0.2em;
     resize: none;
   }
   textarea:not(:last-child) {
