@@ -17,6 +17,8 @@
         <button id="add-flashcard">Add Flashcard 2</button>
       </div>
       <p><a href="login.php">connect</a></p>
+      <p><a href="login.php">inscrit toi!</a></p>
+
       <!-- Display Card of Question And Answers Here -->
       <div id="card-con">
         <div class="card-list-container"></div>
