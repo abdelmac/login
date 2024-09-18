@@ -1,8 +1,8 @@
 <?php
-//    $servname = "localhost";
-//    $username = "root";
-//    $password = "root";
-//    $dbname = "utilisateurs";
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 $user = 'root';
 $password = 'root';
 $db = 'utilisateurs';
@@ -16,6 +16,7 @@ try {
     // echo "Connexion réussie!";
 } catch (PDOException $e) {
     echo "Erreur : " . $e->getMessage();
+    exit(); // Arrête l'exécution si la connexion échoue
 }
 
 if (isset($_POST['ok'])) {
@@ -32,20 +33,27 @@ if (isset($_POST['ok'])) {
         // Hachage du mot de passe
         $hashed_password = password_hash($mdp, PASSWORD_BCRYPT);
 
-        // Requête SQL pour insérer un utilisateur
+        // Génération d'un token aléatoire
+        $token = bin2hex(random_bytes(32));
+
+        // Requête SQL pour insérer un utilisateur avec un token, sans mentionner l'id (auto-incrémentée)
         $requete = $bdd->prepare("INSERT INTO users (pseudo, nom, prenom, mdp, email, token) 
-                                  VALUES (:pseudo, :nom, :prenom, :mdp, :email, '')");
+                                  VALUES (:pseudo, :nom, :prenom, :mdp, :email, :token)");
 
         // Exécution de la requête avec les paramètres
-        $requete->execute([
+        if ($requete->execute([
             "pseudo" => $pseudo,
             "nom" => $nom,
             "prenom" => $prenom,
             "mdp" => $hashed_password,  // Utilisation du mot de passe haché
-            "email" => $email
-        ]);
+            "email" => $email,
+            "token" => $token
+        ])) {
+            echo "Inscription réussie !";
+        } else {
+            echo "Erreur lors de l'inscription.";
+        }
 
-        echo "Inscription réussie !";
     } else {
         echo "Tous les champs doivent être remplis.";
     }
