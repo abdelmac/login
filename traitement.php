@@ -1,12 +1,17 @@
 <?php
-$servname = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "utilisateurs";
+//    $servname = "localhost";
+//    $username = "root";
+//    $password = "root";
+//    $dbname = "utilisateurs";
+$user = 'root';
+$password = 'root';
+$db = 'utilisateurs';
+$host = 'localhost';
+$port = 3306;
 
 try {
     // Connexion à la base de données
-    $bdd = new PDO("mysql:host=$servname;dbname=$dbname", $username, $password);
+    $bdd = new PDO("mysql:host=$host;dbname=$db", $user, $password);
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // echo "Connexion réussie!";
 } catch (PDOException $e) {
