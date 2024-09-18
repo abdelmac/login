@@ -96,7 +96,7 @@
     resize: none;
   }
   textarea:not(:last-child) {
-    margin-bottom: 1.2em;
+    margin-bottom: 1.3em;
   }
   textarea:focus {
     border-color: #363d55;
