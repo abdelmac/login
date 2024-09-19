@@ -38,7 +38,7 @@ if (isset($_POST['ok'])) {
         $token = bin2hex(random_bytes(16));
 
         // Requête SQL pour insérer un utilisateur (sans la colonne 'id', qui est auto-incrémentée)
-        $requete = $bdd->prepare("INSERT INTO users (pseudo, nom, prenom, mdp, email, token) 
+        $requete = $bdd->prepare("INSERT INTO users (0pseudo, nom, prenom, mdp, email, token) 
                                   VALUES (:pseudo, :nom, :prenom, :mdp, :email, :token)");
 
         // Exécution de la requête avec les paramètres
