@@ -147,3 +147,33 @@ const disableButtons = (value) => {
     element.disabled = value;
   });
 };
+
+
+document.getElementById('save-btn').addEventListener('click', function (event) {
+  event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+
+  const question = document.getElementById('question').value;
+  const answer = document.getElementById('answer').value;
+
+  fetch('add_flashcard.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      'question': question,
+      'answer': answer
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      alert(data.message);
+    } else {
+      alert(data.message);
+    }
+  })
+  .catch(error => {
+    console.error('Erreur:', error);
+  });
+});

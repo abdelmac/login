@@ -16,6 +16,33 @@
       <div class="add-flashcard-con">
         <button id="add-flashcard">Add Flashcard 2</button>
       </div>
+      <?php
+        
+
+        if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
+          $email = $_COOKIE['email'];
+          $token = $_COOKIE['token'];
+
+          
+      
+          // Vérification de l'existence de l'utilisateur
+          if ($rep && !empty($rep['email'])) {
+            echo $_POST['email'] ;
+          } else {
+              // Rediriger vers la page de connexion en cas d'échec
+              //header("Location: login.php");
+              echo " va au login mon reufe";
+              //exit();
+          }
+        } else {
+            // Si les cookies ne sont pas définis, rediriger vers la page de connexion
+            header("Location: login.php");
+            exit();
+        }
+        
+
+      ?>
+
       <p><a href="login.php">connect</a></p>
       <p><a href="inscription.php">inscrit toi!</a></p>
 
@@ -26,7 +53,7 @@
     </div>
 
     <!-- Input form for users to fill question and answer -->
-    <form method="$_POST" action="add_flashcard.php">
+    <form method="POST" action="add_flashcard.php">
       <div class="question-container hide" id="add-question-card">
         <h2>Add Flashcard</h2>
         <div class="wrapper">
@@ -54,9 +81,10 @@
           rows="4"
           placeholder="Type the answer here..."
         ></textarea>
-        <button id="save-btn">Save</button>
+        <button id="save-btn" type="submit">Save</button>
       </div>
     </form>
+
 
     <!-- Script -->
     <script src="script.js"></script>
