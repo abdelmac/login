@@ -2,7 +2,7 @@
 session_start();
 include 'db.php'; // Inclusion de la connexion à la base de données
 
-//header('Content-Type: application/json');  // S'assure que la réponse est en JSON
+header('Content-Type: application/json');  // S'assure que la réponse est en JSON
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérification que l'utilisateur est connecté
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // Requête d'insertion
+        // Requête d'insertion avec une requête préparée pour éviter les injections SQL
         $stmt = $conn->prepare("INSERT INTO flashcards (question, answer, user) VALUES (?, ?, ?)");
         $stmt->bind_param("sss", $question, $answer, $_SESSION['username']);
 
@@ -34,4 +34,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
 }
+
 ?>

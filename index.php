@@ -41,6 +41,7 @@
       <textarea
         class="input"
         id="question"
+        name="question"
         placeholder="Type the question here..."
         rows="2"
       ></textarea>
@@ -48,11 +49,13 @@
       <textarea
         class="input"
         id="answer"
+        name="answer"
         rows="4"
         placeholder="Type the answer here..."
       ></textarea>
       <button id="save-btn">Save</button>
     </div>
+
 
     <!-- Script -->
     <script src="script.js"></script>
