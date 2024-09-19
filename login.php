@@ -19,7 +19,7 @@
         $host = 'localhost';
 
         try {
-            $bdd = new PDO("mysql:host=$servname;dbname=utilisateurs", $username, $password);
+            $bdd = new PDO("mysql:host=$host;dbname=$db", $user, $password);
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             // echo "Connexion réussie!";
         } catch(PDOException $e) {

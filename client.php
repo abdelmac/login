@@ -12,7 +12,7 @@
 
         
         try{
-            $bdd = new PDO("mysql:host=$servname; dbname=utilisateurs", 
+            $bdd = new PDO("mysql:host=$host; dbname=$db", 
             $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION) );
             //echo "Connexion réussie!;
         }
@@ -35,8 +35,5 @@
             else{
                 header("location: login.php");
             }
-        }
-
-        
-        
+        }    
 ?>
