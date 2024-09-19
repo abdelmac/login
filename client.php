@@ -1,7 +1,15 @@
 <?php
-        $servname = "localhost";
-        $username = "root";
-        $password = "root";
+        // Activer l'affichage des erreurs pour déboguer
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
+
+        // Paramètres de connexion à la base de données
+        $user = 'root';
+        $password = 'root';
+        $db = 'utilisateurs';
+        $host = 'localhost';
+
         
         try{
             $bdd = new PDO("mysql:host=$servname; dbname=utilisateurs", 

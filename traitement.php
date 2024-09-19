@@ -1,13 +1,14 @@
 <?php
+// Activer l'affichage des erreurs pour déboguer
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+// Paramètres de connexion à la base de données
 $user = 'root';
 $password = 'root';
 $db = 'utilisateurs';
 $host = 'localhost';
-$port = 3306;
 
 try {
     // Connexion à la base de données
@@ -34,10 +35,10 @@ if (isset($_POST['ok'])) {
         $hashed_password = password_hash($mdp, PASSWORD_BCRYPT);
 
         // Génération d'un token aléatoire
-        $token = bin2hex(random_bytes(32));
+        $token = bin2hex(random_bytes(16));
 
-        // Requête SQL pour insérer un utilisateur avec un token, sans mentionner l'id (auto-incrémentée)
-        $requete = $bdd->prepare("INSERT INTO users (0,pseudo, nom, prenom, mdp, email, token) 
+        // Requête SQL pour insérer un utilisateur (sans la colonne 'id', qui est auto-incrémentée)
+        $requete = $bdd->prepare("INSERT INTO users (pseudo, nom, prenom, mdp, email, token) 
                                   VALUES (:pseudo, :nom, :prenom, :mdp, :email, :token)");
 
         // Exécution de la requête avec les paramètres
