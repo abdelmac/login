@@ -34,32 +34,57 @@ cardButton.addEventListener(
   "click",
   (submitQuestion = () => {
     editBool = false;
-    tempQuestion = question.value.trim();
-    tempAnswer = answer.value.trim();
+    let tempQuestion = question.value.trim();
+    let tempAnswer = answer.value.trim();
     if (!tempQuestion || !tempAnswer) {
       errorMessage.classList.remove("hide");
     } else {
-      container.classList.remove("hide");
       errorMessage.classList.add("hide");
-      viewlist();
-      question.value = "";
-      answer.value = "";
+
+      // Envoyer la question et la réponse au serveur via une requête POST
+      const formData = new FormData();
+      formData.append("question", tempQuestion);
+      formData.append("answer", tempAnswer);
+
+      fetch("save_flashcard.php", {
+        method: "POST",
+        body: formData
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === "success") {
+            alert("Flashcard ajoutée avec succès !");
+            // Afficher la carte après l'ajout
+            viewlist(tempQuestion, tempAnswer);
+            question.value = "";
+            answer.value = "";
+            container.classList.remove("hide");
+          } else {
+            alert("Erreur : " + data.message);
+          }
+        })
+        .catch(error => {
+          console.error("Erreur:", error);
+          alert("Une erreur est survenue lors de l'enregistrement de la flashcard.");
+        });
     }
   })
 );
 
 //Card Generate
-function viewlist() {
+function viewlist(questionValue, answerValue) {
   var listCard = document.getElementsByClassName("card-list-container");
   var div = document.createElement("div");
   div.classList.add("card");
+  
   //Question
   div.innerHTML += `
-  <p class="question-div">${question.value}</p>`;
+  <p class="question-div">${questionValue}</p>`;
+  
   //Answer
   var displayAnswer = document.createElement("p");
   displayAnswer.classList.add("answer-div", "hide");
-  displayAnswer.innerText = answer.value;
+  displayAnswer.innerText = answerValue;
 
   //Link to show/hide answer
   var link = document.createElement("a");
@@ -100,6 +125,7 @@ function viewlist() {
   listCard[0].appendChild(div);
   hideQuestion();
 }
+
 
 //Modify Elements
 const modifyElement = (element, edit = false) => {

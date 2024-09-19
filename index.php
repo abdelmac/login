@@ -26,36 +26,37 @@
     </div>
 
     <!-- Input form for users to fill question and answer -->
-    <div class="question-container hide" id="add-question-card">
-      <h2>Add Flashcard</h2>
-      <div class="wrapper">
-        <!-- Error message -->
-        <div class="error-con">
-          <span class="hide" id="error">Input fields cannot be empty!</span>
+    <form method="$_POST" action="add_flashcard.php">
+      <div class="question-container hide" id="add-question-card">
+        <h2>Add Flashcard</h2>
+        <div class="wrapper">
+          <!-- Error message -->
+          <div class="error-con">
+            <span class="hide" id="error">Input fields cannot be empty!</span>
+          </div>
+          <!-- Close Button -->
+          <i class="fa-solid fa-xmark" id="close-btn"></i>
         </div>
-        <!-- Close Button -->
-        <i class="fa-solid fa-xmark" id="close-btn"></i>
+
+        <label for="question">Question:</label>
+        <textarea
+          class="input"
+          id="question"
+          name="question"
+          placeholder="Type the question here..."
+          rows="2"
+        ></textarea>
+        <label for="answer">Answer:</label>
+        <textarea
+          class="input"
+          id="answer"
+          name="answer"
+          rows="4"
+          placeholder="Type the answer here..."
+        ></textarea>
+        <button id="save-btn">Save</button>
       </div>
-
-      <label for="question">Question:</label>
-      <textarea
-        class="input"
-        id="question"
-        name="question"
-        placeholder="Type the question here..."
-        rows="2"
-      ></textarea>
-      <label for="answer">Answer:</label>
-      <textarea
-        class="input"
-        id="answer"
-        name="answer"
-        rows="4"
-        placeholder="Type the answer here..."
-      ></textarea>
-      <button id="save-btn">Save</button>
-    </div>
-
+    </form>
 
     <!-- Script -->
     <script src="script.js"></script>
