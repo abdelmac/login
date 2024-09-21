@@ -31,7 +31,7 @@
           } else {
               // Rediriger vers la page de connexion en cas d'échec
               //header("Location: login.php");
-              echo " va au login mon reufe";
+              echo " va au login mon reuf";
               //exit();
           }
         } else {
