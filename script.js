@@ -165,15 +165,23 @@ document.getElementById('save-btn').addEventListener('click', function (event) {
       'answer': answer
     })
   })
-  .then(response => response.json())
+  .then(response => response.text())  // Utilise .text() pour voir la réponse brute
   .then(data => {
-    if (data.status === 'success') {
-      alert(data.message);
-    } else {
-      alert(data.message);
+    console.log("Réponse brute:", data);  // Affiche la réponse dans la console
+    try {
+      const jsonData = JSON.parse(data);  // Essayer de parser le JSON manuellement
+      if (jsonData.status === 'success') {
+        alert(jsonData.message);  // Message de succès
+      } else {
+        alert(jsonData.message);  // Afficher l'erreur
+      }
+    } catch (error) {
+      console.error("Erreur de parsing JSON:", error);
     }
   })
   .catch(error => {
-    console.error('Erreur:', error);
+    console.error('Erreur:', error);  // Affiche l'erreur dans la console
+    alert("Une erreur s'est produite lors de l'ajout de la flashcard.");
   });
+  
 });
