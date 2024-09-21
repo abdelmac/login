@@ -46,7 +46,7 @@ cardButton.addEventListener(
       formData.append("question", tempQuestion);
       formData.append("answer", tempAnswer);
 
-      fetch("save_flashcard.php", {
+      fetch("add_flashcard.php", {
         method: "POST",
         body: formData
       })
