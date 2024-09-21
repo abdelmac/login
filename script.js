@@ -150,11 +150,18 @@ const disableButtons = (value) => {
 
 
 document.getElementById('save-btn').addEventListener('click', function (event) {
-  event.preventDefault(); // Empêche le formulaire de se soumettre normalement
+  event.preventDefault(); // Empêche la soumission par défaut du formulaire
 
-  const question = document.getElementById('question').value;
-  const answer = document.getElementById('answer').value;
+  const question = document.getElementById('question').value.trim();
+  const answer = document.getElementById('answer').value.trim();
 
+  // Validation des champs question et réponse
+  if (!question || !answer) {
+    alert("Les champs question et réponse ne peuvent pas être vides.");
+    return; // Arrêter l'exécution si validation échoue
+  }
+
+  // Envoyer les données au serveur via fetch
   fetch('add_flashcard.php', {
     method: 'POST',
     headers: {
@@ -165,23 +172,21 @@ document.getElementById('save-btn').addEventListener('click', function (event) {
       'answer': answer
     })
   })
-  .then(response => response.text())  // Utilise .text() pour voir la réponse brute
+  .then(response => response.json())  // Utilise directement .json() car on s'attend à un retour JSON
   .then(data => {
-    console.log("Réponse brute:", data);  // Affiche la réponse dans la console
-    try {
-      const jsonData = JSON.parse(data);  // Essayer de parser le JSON manuellement
-      if (jsonData.status === 'success') {
-        alert(jsonData.message);  // Message de succès
-      } else {
-        alert(jsonData.message);  // Afficher l'erreur
-      }
-    } catch (error) {
-      console.error("Erreur de parsing JSON:", error);
+    if (data.status === 'success') {
+      alert("Flashcard ajoutée avec succès !");
+      viewlist(question, answer);  // Ajouter la nouvelle carte à l'affichage
+      // Réinitialiser les champs
+      document.getElementById('question').value = '';
+      document.getElementById('answer').value = '';
+    } else {
+      alert("Erreur: " + data.message);
     }
   })
   .catch(error => {
-    console.error('Erreur:', error);  // Affiche l'erreur dans la console
-    alert("Une erreur s'est produite lors de l'ajout de la flashcard.");
+    console.error('Erreur:', error);
+    alert("Une erreur est survenue lors de l'ajout de la flashcard.");
   });
-  
 });
+
