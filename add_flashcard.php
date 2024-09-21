@@ -1,61 +1,65 @@
 <?php
-// Activer l'affichage des erreurs pour déboguer
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+session_start();
+include 'db.php';  // Connexion à la base de données
 
-header('Content-Type: application/json');
+$conn = new mysqli($host, $user, $password, $db);
 
-// Connexion à la base de données (remplacez les valeurs par les vôtres)
-$host = "localhost";
-$db = "utilisateurs";  // Changez par le nom de votre base de données
-$user = "root";  // Changez par votre nom d'utilisateur
-$password = "root";  // Changez par votre mot de passe
-
-try {
-    $bdd = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo json_encode(['status' => 'error', 'message' => 'Erreur de connexion à la base de données.']);
-    exit();
+// Fonction pour vérifier l'utilisateur via le token et l'email
+function verifyUser($conn, $email, $token) {
+    $stmt = $conn->prepare("SELECT token FROM users WHERE email = ? LIMIT 1");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($dbToken);
+    $stmt->fetch();
+    $stmt->close();
+    
+    // Vérifier si le token stocké en base de données correspond à celui fourni
+    return ($dbToken === $token);
 }
 
-// Vérifier si l'utilisateur est connecté via les cookies
+// Vérifier si les cookies sont définis (authentification)
 if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
     $email = $_COOKIE['email'];
     $token = $_COOKIE['token'];
 
-    // Vérifier l'utilisateur dans la base de données (ajustez selon votre structure)
-    $stmt = $bdd->prepare("SELECT id FROM utilisateurs WHERE email = ? AND token = ?");
-    $stmt->execute([$email, $token]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Vérifier la validité des cookies dans la base de données
+    if (verifyUser($conn, $email, $token)) {
+        // Si les cookies sont valides, vérifier que la requête est bien de type POST
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Récupérer les données du formulaire (question et réponse)
+            $question = trim($_POST['question']);
+            $answer = trim($_POST['answer']);
 
-    if ($user) {
-        // L'utilisateur est authentifié
-        $user_id = $user['id'];
+            // Validation des champs
+            if (empty($question) || empty($answer)) {
+                echo "Les champs question et réponse ne peuvent pas être vides.";
+                exit();
+            }
 
-        // Récupérer la question et la réponse envoyées en POST
-        $question = isset($_POST['question']) ? trim($_POST['question']) : null;
-        $answer = isset($_POST['answer']) ? trim($_POST['answer']) : null;
+            // Insertion dans la base de données
+            $stmt = $conn->prepare("INSERT INTO flashcards (question, answer, user_email) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $question, $answer, $email); // Utiliser l'email de l'utilisateur connecté
 
-        // Vérifier que les champs ne sont pas vides
-        if (empty($question) || empty($answer)) {
-            echo json_encode(['status' => 'error', 'message' => 'Les champs question et réponse ne peuvent pas être vides.']);
-            exit();
-        }
+            if ($stmt->execute()) {
+                echo "success";  // Réponse de succès
+            } else {
+                echo "Erreur lors de l'ajout de la flashcard.";
+            }
 
-        // Insérer la flashcard dans la base de données
-        $stmt = $bdd->prepare("INSERT INTO flashcards (user_id, question, answer) VALUES (?, ?, ?)");
-        if ($stmt->execute([$user_id, $question, $answer])) {
-            echo json_encode(['status' => 'success', 'message' => 'Flashcard ajoutée avec succès.']);
+            $stmt->close();
+            $conn->close();
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Erreur lors de l\'ajout de la flashcard.']);
+            echo "Méthode non autorisée.";
         }
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Utilisateur non authentifié.']);
+        // Si les cookies ne sont pas valides
+        echo "Erreur d'authentification. Veuillez vous reconnecter.";
     }
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Cookies non définis.']);
+    // Si les cookies ne sont pas définis
+    echo "Vous devez être connecté pour ajouter une flashcard.";
 }
-
 ?>

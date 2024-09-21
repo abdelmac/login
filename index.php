@@ -38,17 +38,20 @@
           
       
           // Vérification de l'existence de l'utilisateur
-          if ($rep && !empty($rep['email'])) {
+          if (!empty($email) && !empty($token)) {
             echo $_POST['email'] ;
+            echo "t'es connecté frerot";
           } else {
               // Rediriger vers la page de connexion en cas d'échec
               //header("Location: login.php");
-              echo " va au login mon reuf";
+              echo " erreur: va au login mon reuf!";
               //exit();
           }
         } else {
             // Si les cookies ne sont pas définis, rediriger vers la page de connexion
             header("Location: login.php");
+            echo " erreur: va au login mon reuf mais le 2!";
+
             exit();
         }
         

@@ -1,12 +1,16 @@
-const container = document.querySelector(".container");
-const addQuestionCard = document.getElementById("add-question-card");
-const cardButton = document.getElementById("save-btn");
-const question = document.getElementById("question");
-const answer = document.getElementById("answer");
-const errorMessage = document.getElementById("error");
-const addQuestion = document.getElementById("add-flashcard");
-const closeBtn = document.getElementById("close-btn");
-let editBool = false;
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector(".container");
+  const addQuestionCard = document.getElementById("add-question-card");
+  const cardButton = document.getElementById("save-btn");
+  const question = document.getElementById("question");
+  const answer = document.getElementById("answer");
+  const errorMessage = document.getElementById("error");
+  const addQuestion = document.getElementById("add-flashcard");
+  const closeBtn = document.getElementById("close-btn");
+  let editBool = false;
+
+  //... rest of your code
+
 
 //Add question when user clicks 'Add Flashcard' button
 addQuestion.addEventListener("click", () => {
@@ -15,6 +19,8 @@ addQuestion.addEventListener("click", () => {
   answer.value = "";
   addQuestionCard.classList.remove("hide");
 });
+
+
 
 //Hide Create flashcard Card
 closeBtn.addEventListener(
@@ -29,6 +35,20 @@ closeBtn.addEventListener(
   })
 );
 
+//Hide Create flashcard Card
+function hideQuestion() {
+  container.classList.remove("hide");
+  addQuestionCard.classList.add("hide");
+  if (editBool) {
+    editBool = false;
+    submitQuestion();
+  }
+}
+
+// Utiliser hideQuestion() ici.
+closeBtn.addEventListener("click", hideQuestion);
+
+
 //Submit Question
 cardButton.addEventListener(
   "click",
@@ -36,6 +56,7 @@ cardButton.addEventListener(
     editBool = false;
     let tempQuestion = question.value.trim();
     let tempAnswer = answer.value.trim();
+
     if (!tempQuestion || !tempAnswer) {
       errorMessage.classList.remove("hide");
     } else {
@@ -50,9 +71,9 @@ cardButton.addEventListener(
         method: "POST",
         body: formData
       })
-        .then(response => response.json())
+        .then(response => response.text()) // On attend une réponse en texte brut
         .then(data => {
-          if (data.status === "success") {
+          if (data === "success") {
             alert("Flashcard ajoutée avec succès !");
             // Afficher la carte après l'ajout
             viewlist(tempQuestion, tempAnswer);
@@ -60,7 +81,7 @@ cardButton.addEventListener(
             answer.value = "";
             container.classList.remove("hide");
           } else {
-            alert("Erreur : " + data.message);
+            alert("Erreur : " + data);  // Affiche le message d'erreur reçu
           }
         })
         .catch(error => {
@@ -70,6 +91,7 @@ cardButton.addEventListener(
     }
   })
 );
+
 
 //Card Generate
 function viewlist(questionValue, answerValue) {
@@ -149,6 +171,7 @@ const disableButtons = (value) => {
 };
 
 
+// Fonction qui soumet la question et la réponse à add_flashcard.php sans utiliser de JSON
 document.getElementById('save-btn').addEventListener('click', function (event) {
   event.preventDefault(); // Empêche la soumission par défaut du formulaire
 
@@ -172,16 +195,16 @@ document.getElementById('save-btn').addEventListener('click', function (event) {
       'answer': answer
     })
   })
-  .then(response => response.json())  // Utilise directement .json() car on s'attend à un retour JSON
+  .then(response => response.text())  // On attend une réponse en texte brut
   .then(data => {
-    if (data.status === 'success') {
+    if (data === 'success') {
       alert("Flashcard ajoutée avec succès !");
       viewlist(question, answer);  // Ajouter la nouvelle carte à l'affichage
       // Réinitialiser les champs
       document.getElementById('question').value = '';
       document.getElementById('answer').value = '';
     } else {
-      alert("Erreur: " + data.message);
+      alert("Erreur: " + data);  // Afficher le message d'erreur reçu du serveur
     }
   })
   .catch(error => {
@@ -190,3 +213,4 @@ document.getElementById('save-btn').addEventListener('click', function (event) {
   });
 });
 
+});
