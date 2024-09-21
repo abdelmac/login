@@ -1,7 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 session_start();
 include 'db.php';  // Connexion à la base de données
 
@@ -44,7 +41,10 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
             $stmt->bind_param("sss", $question, $answer, $email); // Utiliser l'email de l'utilisateur connecté
 
             if ($stmt->execute()) {
-                echo "success";  // Réponse de succès
+                "<script>
+                    alert('Flashcard ajoutée avec succès!');
+                    window.location.href='index.php';
+                </script>";
             } else {
                 echo "Erreur lors de l'ajout de la flashcard.";
             }
@@ -62,4 +62,6 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
     // Si les cookies ne sont pas définis
     echo "Vous devez être connecté pour ajouter une flashcard.";
 }
+
+
 ?>

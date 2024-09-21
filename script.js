@@ -212,5 +212,4 @@ document.getElementById('save-btn').addEventListener('click', function (event) {
     alert("Une erreur est survenue lors de l'ajout de la flashcard.");
   });
 });
-
 });
