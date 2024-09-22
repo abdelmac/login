@@ -101,7 +101,7 @@
     </form>
 
 
-    <<?php
+    <?php
 
     $host = 'localhost';
     $db = 'utilisateurs';
