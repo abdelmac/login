@@ -9,9 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeBtn = document.getElementById("close-btn");
   let editBool = false;
 
-  //... rest of your code
-
-
 //Add question when user clicks 'Add Flashcard' button
 addQuestion.addEventListener("click", () => {
   container.classList.add("hide");
@@ -19,8 +16,6 @@ addQuestion.addEventListener("click", () => {
   answer.value = "";
   addQuestionCard.classList.remove("hide");
 });
-
-
 
 //Hide Create flashcard Card
 closeBtn.addEventListener(
@@ -81,7 +76,7 @@ cardButton.addEventListener(
             answer.value = "";
             container.classList.remove("hide");
           } else {
-            alert("Erreur : " + data);  // Affiche le message d'erreur reçu
+            //alert("Erreur : " + data);  // Affiche le message d'erreur reçu
             
           }
         })
@@ -92,19 +87,17 @@ cardButton.addEventListener(
 
 
 //Card Generate
-function viewlist(questionValue, answerValue) {
+function viewlist() {
   var listCard = document.getElementsByClassName("card-list-container");
   var div = document.createElement("div");
   div.classList.add("card");
-  
   //Question
   div.innerHTML += `
-  <p class="question-div">${questionValue}</p>`;
-  
+  <p class="question-div">${question.value}</p>`;
   //Answer
   var displayAnswer = document.createElement("p");
   displayAnswer.classList.add("answer-div", "hide");
-  displayAnswer.innerText = answerValue;
+  displayAnswer.innerText = answer.value;
 
   //Link to show/hide answer
   var link = document.createElement("a");
@@ -145,7 +138,6 @@ function viewlist(questionValue, answerValue) {
   listCard[0].appendChild(div);
   hideQuestion();
 }
-
 
 //Modify Elements
 const modifyElement = (element, edit = false) => {
@@ -200,4 +192,100 @@ function viewlist(questionValue, answerValue) {
 }
 
 
+function toggleAnswer(event) {
+  event.preventDefault(); // Empêche le comportement par défaut du lien
+  const answer = event.target.previousElementSibling; // Récupère l'élément de réponse associé
+  answer.classList.toggle("hide");
+}
+
+// Ajoute un écouteur d'événements à tous les boutons "Show/Hide" existants
+const showHideButtons = document.querySelectorAll(".show-hide-btn");
+showHideButtons.forEach((button) => {
+  button.addEventListener("click", toggleAnswer);
 });
+
+
+
+    // Fonction pour éditer une flashcard
+    function editFlashcard(event) {
+      const card = event.target.closest('.card');
+      const question = card.querySelector('.question-div').innerText;
+      const answer = card.querySelector('.answer-div').innerText;
+
+      // Rendre les champs éditables dans le formulaire
+      document.getElementById('question').value = question;
+      document.getElementById('answer').value = answer;
+
+      // Changer le comportement du bouton "Save"
+      const saveBtn = document.getElementById('save-btn');
+      saveBtn.textContent = "Mettre à jour";
+
+      // Mettre à jour la carte lorsque l'utilisateur clique sur "Mettre à jour"
+      saveBtn.onclick = function () {
+          const newQuestion = document.getElementById('question').value;
+          const newAnswer = document.getElementById('answer').value;
+
+          const flashcardId = card.dataset.id; // Récupérer l'ID de la flashcard
+
+          // Envoyer les nouvelles données au serveur via une requête POST
+          const formData = new FormData();
+          formData.append('id', flashcardId);
+          formData.append('question', newQuestion);
+          formData.append('answer', newAnswer);
+
+          fetch('edit_flashcard.php', {
+              method: 'POST',
+              body: formData
+          })
+          .then(response => response.text())
+          .then(data => {
+              if (data === 'success') {
+                  alert('Flashcard mise à jour avec succès!');
+                  card.querySelector('.question-div').innerText = newQuestion;
+                  card.querySelector('.answer-div').innerText = newAnswer;
+                  document.getElementById('question').value = '';
+                  document.getElementById('answer').value = '';
+                  saveBtn.textContent = "Save";
+              } else {
+                  alert('Erreur lors de la mise à jour.');
+              }
+          });
+      };
+  }
+
+  // Fonction pour supprimer une flashcard
+  function deleteFlashcard(event) {
+      const card = event.target.closest('.card');
+      const flashcardId = card.dataset.id; // Récupérer l'ID de la flashcard
+
+      // Envoyer une requête POST pour supprimer la flashcard
+      const formData = new FormData();
+      formData.append('id', flashcardId);
+
+      fetch('delete_flashcard.php', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+          if (data === 'success') {
+              alert('Flashcard supprimée avec succès!');
+              card.remove(); // Retirer la carte supprimée du DOM
+          } else {
+              alert('Erreur lors de la suppression.');
+          }
+      });
+  }
+
+  // Ajout des événements "click" pour les boutons Éditer et Supprimer
+  document.querySelectorAll('.edit-btn').forEach((button) => {
+      button.addEventListener('click', editFlashcard);
+  });
+
+  document.querySelectorAll('.delete-btn').forEach((button) => {
+      button.addEventListener('click', deleteFlashcard);
+  });
+
+});
+
+

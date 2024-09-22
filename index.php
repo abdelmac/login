@@ -101,8 +101,8 @@
     </form>
 
 
-    <?php
-    // Connexion à la base de données
+    <<?php
+
     $host = 'localhost';
     $db = 'utilisateurs';
     $user = 'root';
@@ -115,25 +115,47 @@
         die("Could not connect to the database: " . $e->getMessage());
     }
 
-    // Vérifier si l'utilisateur est connecté via les cookies (si nécessaire)
     if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
         $email = $_COOKIE['email'];
+        $token = $_COOKIE['token'];
 
-        // Préparer la requête pour récupérer les flashcards de l'utilisateur
-        $stmt = $pdo->prepare("SELECT question, answer FROM flashcards WHERE user_email = ?");
-        $stmt->execute([$email]);
+        if (!empty($email) && !empty($token)) {
+            // Préparer la requête pour récupérer les flashcards de l'utilisateur
+            $stmt = $pdo->prepare("SELECT question, answer FROM flashcards WHERE user_email = ?");
+            $stmt->execute([$email]);
 
-        // Récupérer les flashcards
-        $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Récupérer les flashcards
+            $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Retourner les flashcards en JSON
-        echo json_encode($flashcards);
+            // Si des flashcards sont trouvées, les afficher
+            if ($flashcards) {
+                foreach ($flashcards as $flashcard) {
+                    echo '<div class="card">';
+                    echo '<p class="question-div">' . htmlspecialchars($flashcard['question']) . '</p>';
+                    echo '<p class="answer-div hide">' . htmlspecialchars($flashcard['answer']) . '</p>';
+                    echo '<a href="" class="show-hide-btn">Show/Hide</a>';
+                    // Ajouter les boutons Edit et Delete
+                    echo '<div class="buttons-con">';
+                    echo '<button class="edit-btn">Éditer</button>';
+                    echo '<button class="delete-btn">Supprimer</button>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo '<p>No flashcards available.</p>';
+            }
+        } else {
+            echo "Erreur : veuillez vous connecter.";
+        }
     } else {
-        // Si l'utilisateur n'est pas connecté, retourner un message d'erreur
-        echo json_encode(['error' => 'User not authenticated']);
+        header("Location: login.php");
+        exit();
     }
+
     ?>
 
+
+    
 
     <!-- Script -->
     <script src="script.js"></script>
