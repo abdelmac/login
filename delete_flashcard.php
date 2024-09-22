@@ -13,8 +13,8 @@ try {
     die("Could not connect to the database: " . $e->getMessage());
 }
 
-if (isset($_POST['id']) && !empty($_POST['id'])) {
-    $id = $_POST['id'];
+if (isset($_POST['data-id']) && !empty($_POST['data-id'])) {
+    $id = $_POST['data-id'];
 
     // Afficher l'ID reçu pour débogage
     echo "ID reçu pour suppression: " . $id;

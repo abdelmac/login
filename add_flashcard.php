@@ -4,6 +4,14 @@ include 'db.php';  // Connexion à la base de données
 
 $conn = new mysqli($host, $user, $password, $db);
 
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Could not connect to the database: " . $e->getMessage());
+}
+
+
 // Fonction pour vérifier l'utilisateur via le token et l'email
 function verifyUser($conn, $email, $token) {
     $stmt = $conn->prepare("SELECT token FROM users WHERE email = ? LIMIT 1");
@@ -59,6 +67,23 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
 } else {
     // Si les cookies ne sont pas définis
     echo "Vous devez être connecté pour ajouter une flashcard.";
+}
+
+
+if (isset($_POST['question']) && isset($_POST['answer'])) {
+    $question = $_POST['question'];
+    $answer = $_POST['answer'];
+
+    $stmt = $pdo->prepare("INSERT INTO flashcards (question, answer) VALUES (?, ?)");
+    if ($stmt->execute([$question, $answer])) {
+        // Récupérer l'ID de la dernière carte insérée
+        $lastId = $pdo->lastInsertId();
+        echo $lastId;  // Retourner l'ID
+    } else {
+        echo 'error';
+    }
+} else {
+    echo 'error: missing data';
 }
 
 
