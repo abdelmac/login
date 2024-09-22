@@ -169,5 +169,35 @@ const disableButtons = (value) => {
 };
 
 
+// Fonction pour afficher les flashcards
+function viewlist(questionValue, answerValue) {
+  var listCard = document.getElementsByClassName("card-list-container");
+  var div = document.createElement("div");
+  div.classList.add("card");
+
+  // Question
+  div.innerHTML += `<p class="question-div">${questionValue}</p>`;
+
+  // Réponse
+  var displayAnswer = document.createElement("p");
+  displayAnswer.classList.add("answer-div", "hide");
+  displayAnswer.innerText = answerValue;
+
+  // Lien pour afficher/masquer la réponse
+  var link = document.createElement("a");
+  link.setAttribute("href", "#");
+  link.setAttribute("class", "show-hide-btn");
+  link.innerHTML = "Show/Hide";
+  link.addEventListener("click", () => {
+    displayAnswer.classList.toggle("hide");
+  });
+
+  div.appendChild(link);
+  div.appendChild(displayAnswer);
+
+  // Ajouter le div à la liste des cartes
+  listCard[0].appendChild(div);
+}
+
 
 });

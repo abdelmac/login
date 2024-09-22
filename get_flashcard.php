@@ -1,31 +1,32 @@
 <?php
-include 'db.php';
-ini_set('session.cookie_secure', '1');
-ini_set('session.cookie_httponly', '1');
-ini_set('session.cookie_samesite', 'Lax');
-session_start();
-
-
-if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Not authenticated']);
-    exit;
-}
-
-$user_id = $_SESSION['user_id'];
+// Connexion à la base de données
+$host = 'localhost';
+$db = 'utilisateurs';
+$user = 'root';
+$password = 'root';
 
 try {
-    $stmt = $pdo->prepare("SELECT * FROM flashcards WHERE user_id = ?");
-    $stmt->execute([$user_id]);
-    $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Si aucune flashcard n'est trouvée, renvoie un message explicite
-    if (empty($flashcards)) {
-        echo json_encode(['status' => 'error', 'message' => 'No flashcards found']);
-    } else {
-        echo json_encode(['status' => 'success', 'flashcards' => $flashcards]);
-    }
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Could not connect to the database: " . $e->getMessage());
+}
 
-} catch (Exception $e) {
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+// Vérifier si l'utilisateur est connecté via les cookies (si nécessaire)
+if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
+    $email = $_COOKIE['email'];
+
+    // Préparer la requête pour récupérer les flashcards de l'utilisateur
+    $stmt = $pdo->prepare("SELECT question, answer FROM flashcards WHERE user_email = ?");
+    $stmt->execute([$email]);
+
+    // Récupérer les flashcards
+    $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Retourner les flashcards en JSON
+    echo json_encode($flashcards);
+} else {
+    // Si l'utilisateur n'est pas connecté, retourner un message d'erreur
+    echo json_encode(['error' => 'User not authenticated']);
 }
 ?>
