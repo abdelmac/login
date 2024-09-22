@@ -41,10 +41,8 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
             $stmt->bind_param("sss", $question, $answer, $email); // Utiliser l'email de l'utilisateur connecté
 
             if ($stmt->execute()) {
-                "<script>
-                    alert('Flashcard ajoutée avec succès!');
-                    window.location.href='index.php';
-                </script>";
+               header("location:index.php");
+               exit();
             } else {
                 echo "Erreur lors de l'ajout de la flashcard.";
             }

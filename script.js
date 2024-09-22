@@ -82,12 +82,10 @@ cardButton.addEventListener(
             container.classList.remove("hide");
           } else {
             alert("Erreur : " + data);  // Affiche le message d'erreur reçu
+            
           }
         })
-        .catch(error => {
-          console.error("Erreur:", error);
-          alert("Une erreur est survenue lors de l'enregistrement de la flashcard.");
-        });
+        
     }
   })
 );
@@ -171,45 +169,5 @@ const disableButtons = (value) => {
 };
 
 
-// Fonction qui soumet la question et la réponse à add_flashcard.php sans utiliser de JSON
-document.getElementById('save-btn').addEventListener('click', function (event) {
-  event.preventDefault(); // Empêche la soumission par défaut du formulaire
 
-  const question = document.getElementById('question').value.trim();
-  const answer = document.getElementById('answer').value.trim();
-
-  // Validation des champs question et réponse
-  if (!question || !answer) {
-    alert("Les champs question et réponse ne peuvent pas être vides.");
-    return; // Arrêter l'exécution si validation échoue
-  }
-
-  // Envoyer les données au serveur via fetch
-  fetch('add_flashcard.php', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      'question': question,
-      'answer': answer
-    })
-  })
-  .then(response => response.text())  // On attend une réponse en texte brut
-  .then(data => {
-    if (data === 'success') {
-      alert("Flashcard ajoutée avec succès !");
-      viewlist(question, answer);  // Ajouter la nouvelle carte à l'affichage
-      // Réinitialiser les champs
-      document.getElementById('question').value = '';
-      document.getElementById('answer').value = '';
-    } else {
-      alert("Erreur: " + data);  // Afficher le message d'erreur reçu du serveur
-    }
-  })
-  .catch(error => {
-    console.error('Erreur:', error);
-    alert("Une erreur est survenue lors de l'ajout de la flashcard.");
-  });
-});
 });
