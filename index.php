@@ -129,18 +129,18 @@
 
             // Si des flashcards sont trouvées, les afficher
             if ($flashcards) {
-                foreach ($flashcards as $flashcard) {
-                    echo '<div class="card">';
-                    echo '<p class="question-div">' . htmlspecialchars($flashcard['question']) . '</p>';
-                    echo '<p class="answer-div hide">' . htmlspecialchars($flashcard['answer']) . '</p>';
-                    echo '<a href="" class="show-hide-btn">Show/Hide</a>';
-                    // Ajouter les boutons Edit et Delete
-                    echo '<div class="buttons-con">';
-                    echo '<button class="edit-btn">Éditer</button>';
-                    echo '<button class="delete-btn">Supprimer</button>';
-                    echo '</div>';
-                    echo '</div>';
-                }
+              foreach ($flashcards as $flashcard) {
+                  echo '<div class="card" data-id="' . htmlspecialchars($flashcard['id']) . '">';
+                  echo '<p class="question-div">' . htmlspecialchars($flashcard['question']) . '</p>';
+                  echo '<p class="answer-div hide">' . htmlspecialchars($flashcard['answer']) . '</p>';
+                  echo '<a href="#" class="show-hide-btn">Show/Hide</a>';
+                  // Ajouter les boutons Edit et Delete
+                  echo '<div class="buttons-con">';
+                  echo '<button class="edit-btn">Éditer</button>';
+                  echo '<button class="delete-btn">Supprimer</button>';
+                  echo '</div>';
+                  echo '</div>';
+              }
             } else {
                 echo '<p>No flashcards available.</p>';
             }

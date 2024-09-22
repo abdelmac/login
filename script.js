@@ -255,9 +255,10 @@ showHideButtons.forEach((button) => {
 
   // Fonction pour supprimer une flashcard
   function deleteFlashcard(event) {
-      const card = event.target.closest('.card');
-      const flashcardId = card.dataset.id; // Récupérer l'ID de la flashcard
+  const card = event.target.closest('.card');
+  const flashcardId = card.dataset.id; // Récupérer l'ID de la flashcard
 
+  if (confirm("Are you sure you want to delete this flashcard?")) {
       // Envoyer une requête POST pour supprimer la flashcard
       const formData = new FormData();
       formData.append('id', flashcardId);
@@ -272,10 +273,12 @@ showHideButtons.forEach((button) => {
               alert('Flashcard supprimée avec succès!');
               card.remove(); // Retirer la carte supprimée du DOM
           } else {
-              alert('Erreur lors de la suppression.');
+              alert('Erreur lors de la suppression : ' + data);
           }
-      });
+      })
+      .catch(error => console.error('Erreur:', error));
   }
+}
 
   // Ajout des événements "click" pour les boutons Éditer et Supprimer
   document.querySelectorAll('.edit-btn').forEach((button) => {

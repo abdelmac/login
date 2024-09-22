@@ -1,4 +1,6 @@
 <?php
+var_dump($_POST);
+
 $host = 'localhost';
 $db = 'utilisateurs';
 $user = 'root';
@@ -11,8 +13,11 @@ try {
     die("Could not connect to the database: " . $e->getMessage());
 }
 
-if (isset($_POST['id'])) {
+if (isset($_POST['id']) && !empty($_POST['id'])) {
     $id = $_POST['id'];
+
+    // Afficher l'ID reçu pour débogage
+    echo "ID reçu pour suppression: " . $id;
 
     // Supprimer la flashcard de la base de données
     $stmt = $pdo->prepare("DELETE FROM flashcards WHERE id = ?");
@@ -22,6 +27,6 @@ if (isset($_POST['id'])) {
         echo 'error';
     }
 } else {
-    echo 'error';
+    echo 'error: ID non reçu ou vide';
 }
 ?>
