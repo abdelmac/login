@@ -256,7 +256,7 @@ function editFlashcard(event) {
 // Fonction pour supprimer une flashcard
 function deleteFlashcard(event) {
 const card = event.target.closest('.card');
-const flashcardId = card.dataset.id; // Récupérer l'ID de la flashcardrerefre
+const flashcardId = card.dataset.id; // Récupérer l'ID de la flashcardrere
 if (confirm("Are you sure you want to delete this flashcard?")) {
     // Envoyer une requête POST pour supprimer la flashcard
     const formData = new FormData();
