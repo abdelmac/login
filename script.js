@@ -265,6 +265,8 @@ if (confirm("Are you sure you want to delete this flashcard?")) {
     fetch('delete_flashcard.php', {
         method: 'POST',
         body: formData
+        console.log(flashcardId);  // Pour déboguer et vérifier l'ID
+
     })
     .then(response => response.text())
     .then(data => {
