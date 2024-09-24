@@ -59,15 +59,15 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
     <div class="container">
         <h1>Vos Flashcards</h1>
         <div id="flashcard-list">
-            <?php foreach ($flashcards as $flashcard): ?>
-    <div class="card" data-id="<?php echo htmlspecialchars($flashcard['id']); ?>">
+        <?php foreach ($flashcards as $flashcard): ?>
+    <div class="flashcard" data-id="<?php echo htmlspecialchars($flashcard['id']); ?>">
+        <p>ID: <?php echo htmlspecialchars($flashcard['id']); ?></p> <!-- Afficher l'ID -->
         <p>Question: <?php echo htmlspecialchars($flashcard['question']); ?></p>
         <p>Réponse: <?php echo htmlspecialchars($flashcard['answer']); ?></p>
         <button class="delete-btn">Supprimer</button>
     </div>
 <?php endforeach; ?>
 
-        </div>
 
         <div id="add-question-card">
             <h2>Ajouter une nouvelle flashcard</h2>

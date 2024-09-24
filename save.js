@@ -52,24 +52,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour afficher la liste des flashcards dynamiquement
     function viewlist(id, question, answer) {
-        const cardList = document.getElementById('flashcard-list'); // Conteneur des flashcards
-        const card = document.createElement('div');
-        card.className = 'flashcard';
-        card.setAttribute('data-id', id);
-        card.innerHTML = `
-            <p>Question: ${question}</p>
-            <p>Réponse: ${answer}</p>
-            <button class="delete-btn">Supprimer</button>
-        `;
-        cardList.appendChild(card); // Ajouter la carte
-
-        // Ajouter l'événement de suppression à la carte nouvellement créée
-        card.querySelector('.delete-btn').addEventListener('click', function () {
-            if (confirm("Voulez-vous vraiment supprimer cette flashcard ?")) {
-                deleteFlashcard(id, card);  // Suppression
-            }
-        });
-    }
+      const cardList = document.getElementById('flashcard-list'); // Conteneur des flashcards
+      const card = document.createElement('div');
+      card.className = 'flashcard';
+      card.setAttribute('data-id', id); // Assurez-vous que l'ID est correctement défini
+      card.innerHTML = `
+          <p>ID: ${id}</p> <!-- Afficher l'ID -->
+          <p>Question: ${question}</p>
+          <p>Réponse: ${answer}</p>
+          <button class="delete-btn">Supprimer</button>
+      `;
+      cardList.appendChild(card); // Ajouter la carte
+  
+      // Ajouter l'événement de suppression à la carte nouvellement créée
+      card.querySelector('.delete-btn').addEventListener('click', function () {
+          if (confirm("Voulez-vous vraiment supprimer cette flashcard ?")) {
+              deleteFlashcard(id, card);  // Suppression
+          }
+      });
+  }
+  
 
     // Fonction pour supprimer une flashcard
     function deleteFlashcard(id, cardElement) {
