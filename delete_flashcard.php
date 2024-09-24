@@ -1,6 +1,4 @@
 <?php
-var_dump($_POST);
-
 $host = 'localhost';
 $db = 'utilisateurs';
 $user = 'root';
@@ -10,23 +8,23 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Could not connect to the database: " . $e->getMessage());
+    die(json_encode(['status' => 'error', 'message' => 'Could not connect to the database: ' . $e->getMessage()]));
 }
 
-if (isset($_POST['data-id']) && !empty($_POST['data-id'])) {
-    $id = $_POST['data-id'];
+// Vérifiez si l'ID est reçu
+if (isset($_POST['id']) && !empty($_POST['id'])) {
+    $id = $_POST['id'];
 
-    // Afficher l'ID reçu pour débogage
-    echo "ID reçu pour suppression: " . $id;
-
-    // Supprimer la flashcard de la base de données
-    $stmt = $pdo->prepare("DELETE FROM flashcards WHERE id = ?");
+    // Préparer la requête SQL pour supprimer la flashcard
+    $stmt = $pdo->prepare("DELETE FROM `flashcards` WHERE `id` = ?");
+    
+    // Exécuter la requête avec l'ID
     if ($stmt->execute([$id])) {
-        echo 'success';
+        echo json_encode(['status' => 'success', 'message' => 'Flashcard supprimée avec succès.']);
     } else {
-        echo 'error';
+        echo json_encode(['status' => 'error', 'message' => 'Erreur lors de la suppression de la flashcard.']);
     }
 } else {
-    echo 'error: ID non reçu ou vide';
+    echo json_encode(['status' => 'error', 'message' => 'ID non reçu ou vide.']);
 }
 ?>

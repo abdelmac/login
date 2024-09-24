@@ -8,9 +8,8 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
-    die("Could not connect to the database: " . $e->getMessage());
+    die(json_encode(['status' => 'error', 'message' => 'Could not connect to the database: ' . $e->getMessage()]));
 }
-
 
 // Fonction pour vérifier l'utilisateur via le token et l'email
 function verifyUser($conn, $email, $token) {
@@ -40,7 +39,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
 
             // Validation des champs
             if (empty($question) || empty($answer)) {
-                echo "Les champs question et réponse ne peuvent pas être vides.";
+                echo json_encode(['status' => 'error', 'message' => 'Les champs question et réponse ne peuvent pas être vides.']);
                 exit();
             }
 
@@ -49,42 +48,23 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
             $stmt->bind_param("sss", $question, $answer, $email); // Utiliser l'email de l'utilisateur connecté
 
             if ($stmt->execute()) {
-               header("location:index.php");
-               exit();
+                // Retourner une réponse JSON valide avec l'ID de la flashcard ajoutée
+                echo json_encode(['status' => 'success', 'message' => 'Flashcard ajoutée avec succès.', 'id' => $stmt->insert_id]);
             } else {
-                echo "Erreur lors de l'ajout de la flashcard.";
+                echo json_encode(['status' => 'error', 'message' => 'Erreur lors de l\'ajout de la flashcard.']);
             }
 
             $stmt->close();
-            $conn->close();
         } else {
-            echo "Méthode non autorisée.";
+            echo json_encode(['status' => 'error', 'message' => 'Méthode non autorisée.']);
         }
     } else {
         // Si les cookies ne sont pas valides
-        echo "Erreur d'authentification. Veuillez vous reconnecter.";
+        echo json_encode(['status' => 'error', 'message' => 'Erreur d\'authentification. Veuillez vous reconnecter.']);
     }
 } else {
     // Si les cookies ne sont pas définis
-    echo "Vous devez être connecté pour ajouter une flashcard.";
+    echo json_encode(['status' => 'error', 'message' => 'Vous devez être connecté pour ajouter une flashcard.']);
 }
-
-
-if (isset($_POST['question']) && isset($_POST['answer'])) {
-    $question = $_POST['question'];
-    $answer = $_POST['answer'];
-
-    $stmt = $pdo->prepare("INSERT INTO flashcards (question, answer) VALUES (?, ?)");
-    if ($stmt->execute([$question, $answer])) {
-        // Récupérer l'ID de la dernière carte insérée
-        $lastId = $pdo->lastInsertId();
-        echo $lastId;  // Retourner l'ID
-    } else {
-        echo 'error';
-    }
-} else {
-    echo 'error: missing data';
-}
-
 
 ?>

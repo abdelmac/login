@@ -1,163 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard App</title>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <div class="container">
-      <div class="add-flashcard-con">
-        <button id="add-flashcard">Add Flashcard 2</button>
-      </div>
-      <?php
+<?php
+session_start();
+include 'db.php';  // Connexion à la base de données
 
-        $host = 'localhost';
-        $db = 'utilisateurs';
-        $user = 'root';
-        $password = 'root';
+$conn = new mysqli($host, $user, $password, $db);
 
-        try {
-            $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            die("Could not connect to the database: " . $e->getMessage());
-        }
-        
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Could not connect to the database: " . $e->getMessage());
+}
 
-        if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
-          $email = $_COOKIE['email'];
-          $token = $_COOKIE['token'];
+// Vérifier si l'utilisateur est connecté via les cookies
+function verifyUser($conn, $email, $token) {
+    $stmt = $conn->prepare("SELECT token FROM users WHERE email = ? LIMIT 1");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($dbToken);
+    $stmt->fetch();
+    $stmt->close();
 
-          
-      
-          // Vérification de l'existence de l'utilisateur
-          if (!empty($email) && !empty($token)) {
-            echo $_POST['email'] ;
-            echo "t'es connecté frerot";
-          } else {
-              // Rediriger vers la page de connexion en cas d'échec
-              //header("Location: login.php");
-              echo " erreur: va au login mon reuf!";
-              //exit();
-          }
-        } else {
-            // Si les cookies ne sont pas définis, rediriger vers la page de connexion
-            header("Location: login.php");
-            echo " erreur: va au login mon reuf mais le 2!";
+    return ($dbToken === $token);
+}
 
-            exit();
-        }
-        
+if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
+    $email = $_COOKIE['email'];
+    $token = $_COOKIE['token'];
 
-      ?>
+    if (verifyUser($conn, $email, $token)) {
+        // L'utilisateur est authentifié
 
-      <p><a href="login.php">connect</a></p>
-      <p><a href="inscription.php">inscrit toi!</a></p>
-
-      <!-- Display Card of Question And Answers Here -->
-      <div id="card-con">
-        <div class="card-list-container"></div>
-      </div>
-    </div>
-
-    <!-- Input form for users to fill question and answer -->
-    <form method="POST" action="add_flashcard.php">
-      <div class="question-container hide" id="add-question-card">
-        <h2>Add Flashcard</h2>
-        <div class="wrapper">
-          <!-- Error message -->
-          <div class="error-con">
-            <span class="hide" id="error">Input fields cannot be empty!</span>
-          </div>
-          <!-- Close Button -->
-          <i class="fa-solid fa-xmark" id="close-btn"></i>
-        </div>
-
-        <label for="question">Question:</label>
-        <textarea
-          class="input"
-          id="question"
-          name="question"
-          placeholder="Type the question here..."
-          rows="2"
-        ></textarea>
-        <label for="answer">Answer:</label>
-        <textarea
-          class="input"
-          id="answer"
-          name="answer"
-          rows="4"
-          placeholder="Type the answer here..."
-        ></textarea>
-        <button id="save-btn" type="submit">Save</button>
-      </div>
-    </form>
-
-
-    <?php
-
-    $host = 'localhost';
-    $db = 'utilisateurs';
-    $user = 'root';
-    $password = 'root';
-
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("Could not connect to the database: " . $e->getMessage());
-    }
-
-    if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
-        $email = $_COOKIE['email'];
-        $token = $_COOKIE['token'];
-
-        if (!empty($email) && !empty($token)) {
-            // Préparer la requête pour récupérer les flashcards de l'utilisateur
-            $stmt = $pdo->prepare("SELECT question, answer FROM flashcards WHERE user_email = ?");
-            $stmt->execute([$email]);
-
-            // Récupérer les flashcards
-            $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Si des flashcards sont trouvées, les afficher
-            if ($flashcards) {
-              foreach ($flashcards as $flashcard) {
-                  echo '<div class="card" data-id="' . htmlspecialchars($flashcard['id']) . '">';
-                  echo '<p class="question-div">' . htmlspecialchars($flashcard['question']) . '</p>';
-                  echo '<p class="answer-div hide">' . htmlspecialchars($flashcard['answer']) . '</p>';
-                  echo '<a href="#" class="show-hide-btn">Show/Hide</a>';
-                  // Ajouter les boutons Edit et Delete
-                  echo '<div class="buttons-con">';
-                  echo '<button class="edit-btn">Éditer</button>';
-                  echo '<button class="delete-btn">Supprimer</button>';
-                  echo '</div>';
-                  echo '</div>';
-              }
-            } else {
-                echo '<p>No flashcards available.</p>';
-            }
-        } else {
-            echo "Erreur : veuillez vous connecter.";
-        }
+        // Récupérer les flashcards existantes
+        $stmt = $pdo->prepare("SELECT id, question, answer FROM flashcards WHERE user_email = ?");
+        $stmt->execute([$email]);
+        $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
+        // Si les cookies ne sont pas valides
         header("Location: login.php");
         exit();
     }
+} else {
+    // Si l'utilisateur n'est pas connecté
+    header("Location: login.php");
+    exit();
+}
 
-    ?>
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+    <div class="container">
+        <h1>Vos Flashcards</h1>
+        <div id="flashcard-list">
+            <?php foreach ($flashcards as $flashcard): ?>
+                <div class="flashcard" data-question="<?php echo htmlspecialchars($flashcard['question']); ?>">
+                    <p>Question: <?php echo htmlspecialchars($flashcard['question']); ?></p>
+                    <p>Réponse: <?php echo htmlspecialchars($flashcard['answer']); ?></p>
+                    <button class="delete-btn">Supprimer</button>
+                </div>
+            <?php endforeach; ?>
+        </div>
 
-    
+        <div id="add-question-card">
+            <h2>Ajouter une nouvelle flashcard</h2>
+            <form>
+                <label for="question">Question:</label>
+                <input type="text" id="question" name="question">
+                
+                <label for="answer">Réponse:</label>
+                <input type="text" id="answer" name="answer">
 
-    <!-- Script -->
-    <script src="script.js"></script>
-  </body>
+                <button id="save-btn">Sauvegarder</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="save.js"></script>
+
+</body>
 </html>
