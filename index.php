@@ -66,6 +66,8 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
         <p>Réponse: <?php echo htmlspecialchars($flashcard['answer']); ?></p>
         <button class="delete-btn">Supprimer</button>
     </div>
+
+    
 <?php endforeach; ?>
 
 
