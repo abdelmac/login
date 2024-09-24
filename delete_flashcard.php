@@ -30,3 +30,11 @@ if (isset($_POST['data-id']) && !empty($_POST['data-id'])) {
     echo 'error: ID non reçu ou vide';
 }
 ?>
+
+
+// Erreur lors de la suppression : array(1) {
+//    ["data-id"]=>
+//    string(0) ""
+//}
+
+//error: ID non reçu ou vide
