@@ -52,26 +52,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fonction pour afficher la liste des flashcards dynamiquement
     function viewlist(id, question, answer) {
-      const cardList = document.getElementById('flashcard-list'); // Conteneur des flashcards
-      const card = document.createElement('div');
-      card.className = 'flashcard';
-      card.setAttribute('data-id', id); // Assurez-vous que l'ID est correctement défini
-      card.innerHTML = `
-          <p>ID: ${id}</p> <!-- Afficher l'ID -->
-          <p>Question: ${question}</p>
-          <p>Réponse: ${answer}</p>
-          <button class="delete-btn">Supprimer</button>
-      `;
-      cardList.appendChild(card); // Ajouter la carte
-  
-      // Ajouter l'événement de suppression à la carte nouvellement créée
-      card.querySelector('.delete-btn').addEventListener('click', function () {
-          if (confirm("Voulez-vous vraiment supprimer cette flashcard ?")) {
-              deleteFlashcard(id, card);  // Suppression
-          }
-      });
-  }
-  
+        const cardList = document.getElementById('flashcard-list'); // Conteneur des flashcards
+        const card = document.createElement('div');
+        card.className = 'flashcard';
+        card.setAttribute('data-id', id);
+        card.innerHTML = `
+            <p>ID: ${id}</p>
+            <p>Question: ${question}</p>
+            <p class="answer" style="display:none;">${answer}</p> <!-- La réponse masquée -->
+            <button class="show-answer-btn">Voir la réponse</button>
+            <button class="delete-btn">Supprimer</button>
+        `;
+        cardList.appendChild(card); // Ajouter la carte
+    }
+
+    // Délégation d'événement pour la gestion des boutons "Voir la réponse" et "Supprimer"
+    document.getElementById('flashcard-list').addEventListener('click', function(event) {
+        const target = event.target;
+
+        // Gestion de l'affichage de la réponse
+        if (target.classList.contains('show-answer-btn')) {
+            const card = target.closest('.flashcard');
+            const answerElement = card.querySelector('.answer');
+            if (answerElement.style.display === 'none' || !answerElement.style.display) {
+                answerElement.style.display = 'block';  // Afficher la réponse
+                target.textContent = "Masquer la réponse";  // Changer le texte du bouton
+            } else {
+                answerElement.style.display = 'none';  // Masquer la réponse
+                target.textContent = "Voir la réponse";  // Remettre le texte d'origine
+            }
+        }
+
+        // Gestion de la suppression de la carte
+        if (target.classList.contains('delete-btn')) {
+            const card = target.closest('.flashcard');
+            const flashcardId = card.getAttribute('data-id');
+            if (confirm("Voulez-vous vraiment supprimer cette flashcard ?")) {
+                deleteFlashcard(flashcardId, card);  // Suppression
+            }
+        }
+    });
 
     // Fonction pour supprimer une flashcard
     function deleteFlashcard(id, cardElement) {
@@ -96,15 +116,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Erreur:', error);
         });
     }
-
-    // Gestion des suppressions pour les cartes existantes au chargement de la page
-    document.querySelectorAll('.flashcard .delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const card = this.closest('.flashcard');
-            const id = card.getAttribute('data-id');
-            if (confirm("Voulez-vous vraiment supprimer cette flashcard ?")) {
-                deleteFlashcard(id, card);  // Suppression
-            }
-        });
-    });
 });

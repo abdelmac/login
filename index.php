@@ -47,31 +47,16 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
 
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcards</title>
+    <title>Flashcard App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Vos Flashcards</h1>
-        <div id="flashcard-list">
-        <?php foreach ($flashcards as $flashcard): ?>
-    <div class="flashcard" data-id="<?php echo htmlspecialchars($flashcard['id']); ?>">
-        <p>ID: <?php echo htmlspecialchars($flashcard['id']); ?></p> <!-- Afficher l'ID -->
-        <p>Question: <?php echo htmlspecialchars($flashcard['question']); ?></p>
-        <p>Réponse: <?php echo htmlspecialchars($flashcard['answer']); ?></p>
-        <button class="delete-btn">Supprimer</button>
-    </div>
-
-    
-<?php endforeach; ?>
-
-
-        <div id="add-question-card">
+<div id="add-question-card">
             <h2>Ajouter une nouvelle flashcard</h2>
             <form>
                 <label for="question">Question:</label>
@@ -85,6 +70,32 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
         </div>
 
     </div>
+
+    <h1>Mes Flashcards</h1>
+    <div id="flashcard-list" class="container">
+        <?php foreach ($flashcards as $flashcard): ?>
+    <div class="flashcard" data-id="<?php echo htmlspecialchars($flashcard['id']); ?>">
+        <p>ID: <?php echo htmlspecialchars($flashcard['id']); ?></p>
+        <p>Question: <?php echo htmlspecialchars($flashcard['question']); ?></p>
+        <p class="answer"><?php echo htmlspecialchars($flashcard['answer']); ?></p> <!-- Réponse masquée -->
+        <button class="show-answer-btn">Voir la réponse</button>
+        <button class="delete-btn">Supprimer</button>
+    </div>
+<?php endforeach; 
+
+foreach ($flashcards as $flashcard) {
+            echo '<div class="flashcard" data-id="' . htmlspecialchars($flashcard['id']) . '">';
+            echo '<p>ID: ' . htmlspecialchars($flashcard['id']) . '</p>';
+            echo '<p>Question: ' . htmlspecialchars($flashcard['question']) . '</p>';
+            echo '<p class="answer" style="display:none;">' . htmlspecialchars($flashcard['answer']) . '</p>';
+            echo '<button class="show-answer-btn">Voir la réponse</button>';
+            echo '<button class="delete-btn">Supprimer</button>';
+            echo '</div>';
+        }
+?>
+
+
+        
 
     <script src="save.js"></script>
 

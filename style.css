@@ -7,12 +7,90 @@
   body {
     background-color: #f7f9fd;
   }
-  .container {
-    width: 90vw;
-    max-width: 62.5em;
-    position: relative;
-    margin: auto;
-  }
+ /* Conteneur principal */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-around;
+}
+
+/* Style de base pour chaque flashcard */
+.flashcard {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.flashcard:hover {
+  transform: translateY(-5px);
+}
+
+.flashcard p {
+  margin: 10px 0;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Cacher la réponse par défaut */
+.answer {
+  display: none;
+  font-size: 16px;
+  color: #555;
+  margin-top: 10px;
+}
+
+/* Boutons pour afficher la réponse et supprimer */
+.show-answer-btn, .delete-btn {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.show-answer-btn:hover {
+  background-color: #0056b3;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* Style général de la page */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 36px;
+  color: #333;
+}
+
+#flashcard-list {
+  margin: 20px auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
   .add-flashcard-con {
     display: flex;
     justify-content: flex-end;

@@ -252,6 +252,21 @@ function editFlashcard(event) {
       });
   };
 }
+document.addEventListener('DOMContentLoaded', () => {
+  // Fonction pour gérer l'affichage de la réponse
+  document.querySelectorAll('.show-answer-btn').forEach(button => {
+      button.addEventListener('click', function () {
+          const answerElement = this.previousElementSibling; // Sélectionne l'élément de la réponse
+          if (answerElement.style.display === 'none' || !answerElement.style.display) {
+              answerElement.style.display = 'block'; // Affiche la réponse
+              this.textContent = 'Masquer la réponse'; // Change le texte du bouton
+          } else {
+              answerElement.style.display = 'none'; // Masque la réponse
+              this.textContent = 'Voir la réponse'; // Remet le texte du bouton
+          }
+      });
+  });
+});
 
 // Fonction pour supprimer une flashcard
 function deleteFlashcard(event) {
