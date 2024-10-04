@@ -12,10 +12,6 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <div class="container">
-      <div class="add-flashcard-con">
-        <button id="add-flashcard">Add Flashcard 2</button>
-      </div>
       <?php
 
         $host = 'localhost';
