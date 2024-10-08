@@ -35,7 +35,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
         $stmt->execute([$email]);
         $flashcards = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } else {
-        // Si les cookies ne sont pas valides
+        // Si les cookies ne sont pas validesee
         header("Location: login.php");
         exit();
     }
