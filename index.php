@@ -40,7 +40,7 @@ if (isset($_COOKIE['email']) && isset($_COOKIE['token'])) {
         exit();
     }
 } else {
-    // Si l'utilisateur n'est pas connecté
+    // Si l'utilisateur n'est pas connectédsdsds
     header("Location: login.php");
     exit();
 }
